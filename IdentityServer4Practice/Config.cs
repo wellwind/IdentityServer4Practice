@@ -33,6 +33,18 @@ namespace IdentityServer4Practice
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = { "api1" }
+                },
+                // 允許使用password存取的client
+                new Client
+                {
+                    ClientId = "ro.client",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = { "api1" }
                 }
             };
         }
