@@ -34,5 +34,13 @@ namespace MvcClient.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.Authentication.SignOutAsync("Cookies");
+            await HttpContext.Authentication.SignOutAsync("oidc");
+
+            return new EmptyResult();
+        }
     }
 }
