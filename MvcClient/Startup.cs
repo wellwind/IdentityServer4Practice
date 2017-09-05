@@ -53,13 +53,6 @@ namespace MvcClient
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
             // 使用cookie認證
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
@@ -76,6 +69,13 @@ namespace MvcClient
 
                 ClientId = "mvc",
                 SaveTokens = true
+            });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
