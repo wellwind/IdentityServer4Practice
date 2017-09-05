@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
+using Newtonsoft.Json.Linq;
 
 namespace Client
 {
@@ -15,6 +17,25 @@ namespace Client
         {
             var accessToken = await getAccessToken();
             Console.WriteLine(accessToken);
+
+            var client = new HttpClient();
+            client.SetBearerToken(accessToken);
+
+            await outputApiData(client);
+        }
+
+        private static async Task outputApiData(HttpClient client)
+        {
+            var response = await client.GetAsync("http://localhost:5001/identity");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.StatusCode);
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(JArray.Parse(content));
+            }
         }
 
         private static async Task<string> getAccessToken()
