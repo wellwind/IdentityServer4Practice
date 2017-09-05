@@ -68,5 +68,15 @@ namespace IdentityServer4Practice
                 }
             };
         }
+
+        // 支援的scope
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+            };
+        }
     }
 }
