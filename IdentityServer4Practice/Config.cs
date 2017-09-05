@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
 
 namespace IdentityServer4Practice
 {
@@ -32,6 +33,26 @@ namespace IdentityServer4Practice
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = { "api1" }
+                }
+            };
+        }
+
+        // 測試的users
+        public static List<TestUser> GetUsers()
+        {
+            return new List<TestUser>
+            {
+                new TestUser
+                {
+                    SubjectId = "1",
+                    Username = "alice",
+                    Password = "password"
+                },
+                new TestUser
+                {
+                    SubjectId = "2",
+                    Username = "bob",
+                    Password = "password"
                 }
             };
         }
