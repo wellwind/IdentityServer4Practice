@@ -34,7 +34,7 @@ namespace IdentityServer4Practice
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = {"api1"}
                 },
                 // 允許使用password存取的client
                 new Client
@@ -46,26 +46,30 @@ namespace IdentityServer4Practice
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = {"api1"}
                 },
-                // 允許使用implicit flow的client
+                // 允許使用hybrid flow的client
                 new Client
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
 
-                    // where to redirect to after login
-                    RedirectUris = { "http://localhost:5002/signin-oidc" },
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
 
-                    // where to redirect to after logout
-                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+                    RedirectUris = {"http://localhost:5002/signin-oidc"},
+                    PostLogoutRedirectUris = {"http://localhost:5002/signout-callback-oidc"},
 
-                    AllowedScopes = new List<string>
+                    AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
-                    }
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    },
+                    AllowOfflineAccess = true
                 }
             };
         }
