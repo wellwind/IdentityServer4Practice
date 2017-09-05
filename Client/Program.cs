@@ -15,12 +15,19 @@ namespace Client
 
         private static async Task MainAsync()
         {
-            var accessToken = await getAccessToken();
-            Console.WriteLine(accessToken);
+            var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
 
+            var accessToken = String.Empty;
             var client = new HttpClient();
-            client.SetBearerToken(accessToken);
 
+            Console.WriteLine("-- Get Api using client credentials --");
+            accessToken = await getAccessTokenUsingClientCredientials(disco);
+            client.SetBearerToken(accessToken);
+            await outputApiData(client);
+
+            Console.WriteLine("-- Get Api using password --");
+            accessToken = await getAccessTokenUsingPassword(disco);
+            client.SetBearerToken(accessToken);
             await outputApiData(client);
         }
 
@@ -38,9 +45,8 @@ namespace Client
             }
         }
 
-        private static async Task<string> getAccessToken()
+        private static async Task<string> getAccessTokenUsingClientCredientials(DiscoveryResponse disco)
         {
-            var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
             var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
             var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1");
 
@@ -50,8 +56,20 @@ namespace Client
                 return null;
             }
 
-            Console.WriteLine(tokenResponse.Json);
-            Console.WriteLine("\n\n");
+            return tokenResponse.AccessToken;
+        }
+
+        private static async Task<string> getAccessTokenUsingPassword(DiscoveryResponse disco)
+        {
+            // request token
+            var tokenClient = new TokenClient(disco.TokenEndpoint, "ro.client", "secret");
+            var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync("alice", "password", "api1");
+
+            if (tokenResponse.IsError)
+            {
+                Console.WriteLine(tokenResponse.Error);
+                return null;
+            }
 
             return tokenResponse.AccessToken;
         }
